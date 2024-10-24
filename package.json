@@ -1,5 +1,5 @@
 {
-  "name": "my-next-app",
+  "name": "podcast",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,9 +13,12 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts"
   },
   "dependencies": {
-    "next": "14.2.5",
+    "lucide-react": "^0.453.0",
+    "next": "^15.0.1",
+    "next-intl": "^3.23.2",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sonner": "^1.5.0"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.5",

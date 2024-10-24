@@ -1,5 +1,5 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "my-next-app"
+name = "podcast"
 compatibility_date = "2024-10-18"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
@@ -26,10 +26,10 @@ pages_build_output_dir = ".vercel/output/static"
 
 # Bind a D1 database. D1 is Cloudflare’s native serverless SQL database.
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#d1-databases
-# [[d1_databases]]
-# binding = "MY_DB"
-# database_name = "my-database"
-# database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+[[d1_databases]]
+binding = "PODCAST_DB"
+database_name = "podcast_hub"
+database_id = "09f7a7c7-66ae-41ea-9dbe-b8b635b19758"
 
 # Bind a Durable Object. Durable objects are a scale-to-zero compute primitive based on the actor model.
 # Durable Objects can live for as long as needed. Use these when you need a long-running "server", such as in realtime apps.
@@ -54,9 +54,9 @@ pages_build_output_dir = ".vercel/output/static"
 
 # Bind an R2 Bucket. Use R2 to store arbitrarily large blobs of data, such as files.
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#r2-buckets
-# [[r2_buckets]]
-# binding = "MY_BUCKET"
-# bucket_name = "my-bucket"
+[[r2_buckets]]
+binding = "PODCAST_BUCKET"
+bucket_name = "podcast"
 
 # Bind another Worker service. Use this binding to call another Worker without network overhead.
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#service-bindings
