@@ -5,10 +5,11 @@ import Image from "next/image";
 import { Play, Clock, Calendar } from "lucide-react";
 
 import type { Podcast } from "@/types/podcast";
+import { formatTime } from "@/utils/time";
 
 interface PodcastCardProps {
   Podcast: Podcast;
-  onPlay: (Podcast: Podcast) => void;
+  onPlay: (e: React.MouseEvent) => void;
 }
 
 export default function PodcastCard({ Podcast, onPlay }: PodcastCardProps) {
@@ -31,7 +32,7 @@ export default function PodcastCard({ Podcast, onPlay }: PodcastCardProps) {
           <div className="flex items-center space-x-4 text-sm text-gray-500">
             <span className="flex items-center">
               <Clock size={16} className="mr-1" />
-              {Podcast.duration}
+              {formatTime(parseInt(Podcast.duration))}
             </span>
             <span className="flex items-center">
               <Calendar size={16} className="mr-1" />
@@ -39,7 +40,7 @@ export default function PodcastCard({ Podcast, onPlay }: PodcastCardProps) {
             </span>
           </div>
           <button
-            onClick={() => onPlay(Podcast)}
+            onClick={onPlay}
             className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700"
           >
             <Play size={16} />

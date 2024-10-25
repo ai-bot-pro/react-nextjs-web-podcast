@@ -20,3 +20,5 @@ export interface CurrentPodcast {
     progress: number;
     audioUrl: string;
 }
+
+export type PlaybackMode = 'sequential' | 'loop' | 'random' | 'single';

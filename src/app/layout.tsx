@@ -4,7 +4,8 @@ import { Toaster } from "sonner";
 import NextScript from "next/script";
 import Script from "next/script";
 
-import { ThemeProvider } from "@/providers/theme";
+import { Body } from "@/layouts/body";
+import { AudioContextProvider } from "@/contexts/AudioContext";
 
 export default function RootLayout({
   children,
@@ -36,10 +37,12 @@ export default function RootLayout({
         />
       </head>
 
-      <ThemeProvider>
-        <Toaster position="top-center" richColors />
-        {children}
-      </ThemeProvider>
+      <Body>
+        <AudioContextProvider>
+          <Toaster position="top-center" richColors />
+          {children}
+        </AudioContextProvider>
+      </Body>
     </html>
   );
 }

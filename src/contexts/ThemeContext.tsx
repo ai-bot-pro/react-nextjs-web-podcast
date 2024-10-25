@@ -1,17 +1,16 @@
 "use client";
 
-import { ContextProviderProps, ContextProviderValue } from "@/types/context";
 import { createContext, useContext, useEffect, useState } from "react";
-import { cacheGet, cacheSet } from "@/utils/local_cache";
 
-export const useAppContext = () => useContext(AppContext);
+import { ContextProviderProps, ContextProviderValue } from "@/types/context";
+import { cacheGet } from "@/utils/local-cache";
 
-export const AppContext = createContext({} as ContextProviderValue);
+export const useThemeContext = () => useContext(ThemeContext);
 
-export const AppContextProvider = ({ children }: ContextProviderProps) => {
+export const ThemeContext = createContext({} as ContextProviderValue);
+
+export const ThemeContextProvider = ({ children }: ContextProviderProps) => {
   const [theme, setTheme] = useState("light");
-  const [isSiderOpen, setIsSiderOpen] = useState(false);
-
   useEffect(() => {
     const themeInCache = cacheGet("THEME");
     if (themeInCache && ["dark", "light"].includes(themeInCache)) {
@@ -31,17 +30,22 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       mediaQuery.removeEventListener("change", handleChange);
     };
   }, []);
-
   return (
-    <AppContext.Provider
+    <ThemeContext.Provider
       value={{
         theme,
         setTheme,
-        isSiderOpen,
-        setIsSiderOpen,
       }}
     >
       {children}
-    </AppContext.Provider>
+    </ThemeContext.Provider>
   );
 };
+
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useAudio must be used within an ThemeContextProvider");
+  }
+  return context;
+}
