@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS podcast (
   update_time text NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_podcast_pid ON podcast(pid);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_podcast_pid ON podcast(pid);
 CREATE INDEX IF NOT EXISTS idx_podcast_ctime ON podcast(create_time);
 CREATE INDEX IF NOT EXISTS idx_podcast_status ON podcast(is_published,category,status) where status!=5;
 
