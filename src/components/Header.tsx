@@ -10,7 +10,7 @@ export default function Header() {
           <div className="flex items-center">
             <Mic className="h-8 w-8 text-indigo-600" />
             <span className="ml-2 text-xl font-bold text-gray-900">
-              TechCast
+              Podcast
             </span>
           </div>
           <div className="flex items-center space-x-4">

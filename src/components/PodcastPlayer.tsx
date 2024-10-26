@@ -76,8 +76,8 @@ export default function PodcastPlayer({
               <Image
                 src={currentPodcast.image}
                 alt={currentPodcast.title}
-                width={1000}
-                height={500}
+                width={640}
+                height={480}
                 priority={true}
                 className="w-12 h-12 rounded object-cover"
               />

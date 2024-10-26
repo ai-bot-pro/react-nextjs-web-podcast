@@ -3,6 +3,7 @@ export interface Podcast {
     title: string;
     author: string;
     speakers: string;
+    source: string;
     description: string;
     duration: string;
     date: string;

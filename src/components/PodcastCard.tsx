@@ -18,8 +18,8 @@ export default function PodcastCard({ Podcast, onPlay }: PodcastCardProps) {
       <Image
         src={Podcast.image}
         alt={Podcast.title}
-        width={1000}
-        height={500}
+        width={640}
+        height={480}
         priority={true}
         className="w-full h-48 object-cover"
       />

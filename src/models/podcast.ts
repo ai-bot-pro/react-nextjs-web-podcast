@@ -46,6 +46,7 @@ export function formatPodcast(row: Record<string, unknown>): Podcast {
         title: row.title as string,
         author: row.author as string,
         speakers: row.speakers as string,
+        source: row.source as string,
         description: row.description as string,
         duration: row.duration as string,
         date: row.create_time as string,
@@ -56,6 +57,5 @@ export function formatPodcast(row: Record<string, unknown>): Podcast {
         category: row.category as string,
         status: row.status as string,
     }
-    console.log(podcast)
     return podcast;
 }

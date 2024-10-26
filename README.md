@@ -1,6 +1,23 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`c3`](https://developers.cloudflare.com/pages/get-started/c3).
+<div align="center">
+    <img src="./public/an_AI_podcast_to_show_the_website.png" alt="">
+</div>
+
+# Intro
+
+Just an AI podcasts display website(listen), the podcast content from pdf, web pages, text, pictures, audio and video and other multimodal data, through the multimodal large language model, or multiple large language model generated ai podcast content; :)
+
+data process pipeline:
+
+- dify platform
+- coze platform
+- apipeai(use remote api models and local open source generative models)
+
+---
+
+# Deploy Cloudflare
 
 ## Getting Started
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`c3`](https://developers.cloudflare.com/pages/get-started/c3).
 
 First, run the development server:
 
@@ -10,11 +27,11 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+> __TIPS__: dev data see: [data/podcast.sql](data/podcast.sql)
 
 ## Cloudflare integration
 

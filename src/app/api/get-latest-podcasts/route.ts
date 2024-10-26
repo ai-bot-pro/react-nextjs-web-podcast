@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
         return respData(podcasts);
     } catch (e) {
-        console.log("get latest podcasts failed:", e);
+        console.error("get latest podcasts failed:", e);
         return respErr("get latest podcasts failed");
     }
 }

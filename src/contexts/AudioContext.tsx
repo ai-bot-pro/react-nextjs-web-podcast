@@ -66,7 +66,7 @@ export function AudioContextProvider({
 
         const json = await resp.json();
         const { data } = json as { data: Podcast[] };
-        console.log(data);
+        //console.log(data);
         setPodcasts(data);
       } catch (err) {
         setError("Failed to load podcasts. Please try again later.");
@@ -173,7 +173,6 @@ export function AudioContextProvider({
   };
 
   const playPodcast = (podcast: Podcast) => {
-    console.log("playPodcast", podcast);
     const index = podcasts.findIndex((ep) => ep.title === podcast.title);
     setCurrentIndex(index);
     setCurrentPodcast(podcast);

@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS podcast (
   author text NOT NULL,
   /*speakker: use ',' split*/
   speakers text NOT NULL,
+  /*source: video_youtube | pdf | text | img | audio */
+  source text DEFAULT "",
   audio_url text NOT NULL,
   description text DEFAULT "",
   audio_content text DEFAULT "",
@@ -33,7 +35,7 @@ CREATE INDEX IF NOT EXISTS idx_podcast_status ON podcast(is_published,category,s
 
 insert into podcast(pid,title,author,speakers,audio_url,description,cover_img_url,duration,category,is_published,create_time,update_time) values
 (
-    "0a6c9d4fd4054ca0adafa59c6ee2b4e2",
+    "0a6c9d4fd4054ca0adafa59c6ee2b4e1",
     "large language model",
     "weedge",
     "zh-CN-YunjianNeural,zh-CN-XiaoxiaoNeural",
