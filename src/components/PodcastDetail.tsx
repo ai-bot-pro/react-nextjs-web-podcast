@@ -47,7 +47,7 @@ export default function PodcastDetail({
               className="flex items-center space-x-2 bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition-colors"
             >
               <Play size={20} />
-              <span>Play Podcast</span>
+              <span>Play</span>
             </button>
           </div>
 
@@ -68,16 +68,32 @@ export default function PodcastDetail({
             </p>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
+              Source
+            </h2>
+            {podcast.source.includes("http") ? (
+              <p className="text-gray-600 leading-relaxed">
+                <a href={podcast.source}>{podcast.source}</a>
+              </p>
+            ) : (
+              ""
+            )}
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
               Audio Content
             </h2>
             <p className="text-gray-600 leading-relaxed">
-              {podcast.audioContent}
+              {podcast.audioContent.split("\n").map((line, index) => (
+                <span key={index}>
+                  {line}
+                  <br /> <br />
+                </span>
+              ))}
             </p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
+            {/* <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
               Time Line
             </h2>
-            <ul className="list-disc list-inside text-gray-600 space-y-2"></ul>
+            <ul className="list-disc list-inside text-gray-600 space-y-2"></ul> */}
           </div>
         </div>
       </div>
