@@ -13,6 +13,7 @@ export interface Podcast {
     tags: string;
     category: string;
     status: string;
+    audioSize: number;
 }
 
 export interface CurrentPodcast {

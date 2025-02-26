@@ -22,10 +22,14 @@ export default function Header() {
               />
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
-            <button className="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
+            <a
+              href="/rss"
+              target="_blank"
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+            >
               <Rss className="h-5 w-5" />
               <span>Subscribe</span>
-            </button>
+            </a>
           </div>
         </div>
       </div>
