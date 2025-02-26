@@ -11,10 +11,12 @@ import {
   Repeat,
   Shuffle,
   Repeat1,
+  X,
 } from "lucide-react";
 
 import type { PlaybackMode, Podcast } from "@/types/podcast";
 import { formatTime } from "@/utils/time";
+import { useAudio } from "@/contexts/AudioContext";
 
 interface PodcastPlayerProps {
   currentPodcast: Podcast | null;
@@ -43,6 +45,7 @@ export default function PodcastPlayer({
   onPrevious,
   onChangePlaybackMode,
 }: PodcastPlayerProps) {
+  const audio = useAudio();
   const currentTimeInSeconds = currentPodcast
     ? (progress / 100) * parseInt(currentPodcast.duration)
     : 0;
@@ -69,7 +72,7 @@ export default function PodcastPlayer({
 
   return (
     <>
-      {currentPodcast && (
+      {currentPodcast && audio.isPlayerVisible && ( // Conditionally render based on isPlayerVisible
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -151,6 +154,13 @@ export default function PodcastPlayer({
                 className="w-24 h-2 bg-gray-200 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-indigo-600 [&::-webkit-slider-thumb]:rounded-full"
               />
             </div>
+            {/* Close Button */}
+            <button
+              onClick={audio.togglePlayerVisibility}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <X size={24} />
+            </button>
           </div>
         </div>
       )}

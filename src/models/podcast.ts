@@ -23,11 +23,10 @@ export async function getPodcastByPid(pid: string): Promise<Podcast | null> {
     return formatPodcast(results[0] as Record<string, unknown>);
 }
 
-
 export async function getLatestPodcasts(
     page: number,
     limit: number
-): Promise<Podcast[]> {
+): Promise<{ data: Podcast[], total: number }> {
     if (page <= 0) {
         page = 1;
     }
@@ -40,15 +39,32 @@ export async function getLatestPodcasts(
         "SELECT * from podcast where is_published is True order by create_time desc limit ? offset ?;"
     ).bind(limit, offset);
     const { results } = await stmt.all();
-    //console.log(results)
+    const total = await getPodcastsTotal();
 
+    console.log(page, limit, results, total)
     if (results.length === 0) {
-        return [];
+        return { data: [], total: total };
     }
 
-    return getPodcastsFromSqlResult(results);
+    return { data: getPodcastsFromSqlResult(results), total: total };
 }
 
+export async function getPodcastsTotal(): Promise<number> {
+    try {
+        const stmt = getRequestContext().env.PODCAST_DB.prepare(
+            "SELECT count(1) as total from podcast where is_published is True;"
+        );
+        const { results } = await stmt.all();
+        if (results.length === 0) {
+            return 0;
+        }
+        const total = Number(results[0].total);
+        return total;
+    } catch (error) {
+        console.error("Error fetching podcasts total:", error);
+        throw new Error("Failed to fetch podcasts total");
+    }
+}
 export function getPodcastsFromSqlResult(podcasts: Record<string, unknown>[]): Podcast[] {
     let res: Podcast[] = [];
     podcasts.forEach((row) => {
