@@ -1,8 +1,28 @@
-import { getRequestContext } from '@cloudflare/next-on-pages'
+import { getRequestContext } from '@cloudflare/next-on-pages';
 import { Podcast } from '../types/podcast';
 
 // see: https://developers.cloudflare.com/d1/build-with-d1/d1-client-api/
-export const runtime = 'edge'
+export const runtime = 'edge';
+
+export async function getPodcastByPid(pid: string): Promise<Podcast | null> {
+    if (!pid) {
+        return null;
+    }
+
+    const stmt = getRequestContext().env.PODCAST_DB.prepare(
+        "SELECT * from podcast where pid = ? and is_published is True;"
+    ).bind(pid);
+
+    const { results } = await stmt.all();
+
+    if (results.length === 0) {
+        return null;
+    }
+
+    // Assuming only one result will be returned for a given pid
+    return formatPodcast(results[0] as Record<string, unknown>);
+}
+
 
 export async function getLatestPodcasts(
     page: number,
