@@ -23,6 +23,11 @@ interface AudioContextType {
   playbackMode: PlaybackMode;
   changePlaybackMode: (mode: PlaybackMode) => void;
   podcasts: Podcast[];
+  loadPodcasts: (page: number, limit: number) => Promise<void>; // Add loadPodcasts
+  totalPodcasts: number;
+  isLoading: boolean;
+  isPlayerVisible: boolean; // New state
+  togglePlayerVisibility: () => void; // New function
 }
 
 const AudioContext = createContext<AudioContextType | null>(null);
@@ -43,41 +48,52 @@ export function AudioContextProvider({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [playbackMode, setPlaybackMode] = useState<PlaybackMode>("sequential");
+  const [totalPodcasts, setTotalPodcasts] = useState<number>(0); // add total podcasts
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isPlayerVisible, setIsPlayerVisible] = useState(true); // Initialize as visible
 
   if (isNaN(progress)) {
     setProgress(0);
   }
 
   useEffect(() => {
-    const loadPodcasts = async (page: number) => {
-      try {
-        const params = {
-          page: page,
-          limit: 50,
-        };
+    if (isInitialLoad) {
+      //loadPodcasts(1, 10); // default load first page
+      setIsInitialLoad(false);
+    }
+  }, [isInitialLoad]);
 
-        const resp = await fetch("/api/get-latest-podcasts", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(params),
-        });
+  const loadPodcasts = async (page: number, limit: number) => {
+    setIsLoading(true);
+    try {
+      const params = {
+        page: page,
+        limit: limit,
+      };
 
-        const json = await resp.json();
-        const { data } = json as { data: Podcast[] };
-        //console.log(data);
-        setPodcasts(data);
-      } catch (err) {
-        setError("Failed to load podcasts. Please try again later.");
-        console.error("Failed to load podcasts:", err);
-      } finally {
-        setIsLoading(false);
+      const resp = await fetch("/api/get-latest-podcasts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+
+      if (!resp.ok) {
+        throw new Error("Failed to fetch podcasts");
       }
-    };
-
-    loadPodcasts(1);
-  }, []);
+      const json = await resp.json();
+      const { data } = json as { data: { data: Podcast[]; total: number } };
+      console.log(data)
+      setPodcasts(data.data);
+      setTotalPodcasts(data.total); // Update totalPodcasts
+    } catch (err) {
+      setError("Failed to load podcasts. Please try again later.");
+      console.error("Failed to load podcasts:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -178,6 +194,7 @@ export function AudioContextProvider({
     setCurrentPodcast(podcast);
     setCurrentTime(0);
     setIsPlaying(true);
+    setIsPlayerVisible(true); // Make sure player is visible when a podcast starts playing
   };
 
   const playNext = () => {
@@ -208,30 +225,10 @@ export function AudioContextProvider({
   const changePlaybackMode = (mode: PlaybackMode) => {
     setPlaybackMode(mode);
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 text-lg mb-4">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // New function to toggle player visibility
+  const togglePlayerVisibility = () => {
+    setIsPlayerVisible(!isPlayerVisible);
+  };
 
   return (
     <AudioContext.Provider
@@ -249,6 +246,11 @@ export function AudioContextProvider({
         playbackMode,
         changePlaybackMode,
         podcasts,
+        loadPodcasts, // Add loadPodcasts
+        totalPodcasts,
+        isLoading,
+        isPlayerVisible, // Add isPlayerVisible
+        togglePlayerVisibility, // Add togglePlayerVisibility
       }}
     >
       {children}
