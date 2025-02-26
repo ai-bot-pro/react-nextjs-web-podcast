@@ -22,7 +22,7 @@ export default function Page() {
     if (audio.podcasts.length > 0) {
       const startIndex = (currentPage - 1) * podcastsPerPage;
       const endIndex = startIndex + podcastsPerPage;
-      console.log("audio.podcasts", audio.podcasts, startIndex, endIndex);
+      //console.log("audio.podcasts", audio.podcasts, startIndex, endIndex);
       //setCurrentPodcasts(audio.podcasts.slice(startIndex, endIndex));
       setCurrentPodcasts(audio.podcasts);
     } else {

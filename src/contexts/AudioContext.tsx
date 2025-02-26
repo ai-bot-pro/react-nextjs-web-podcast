@@ -84,7 +84,7 @@ export function AudioContextProvider({
       }
       const json = await resp.json();
       const { data } = json as { data: { data: Podcast[]; total: number } };
-      console.log(data)
+      //console.log(data)
       setPodcasts(data.data);
       setTotalPodcasts(data.total); // Update totalPodcasts
     } catch (err) {

@@ -41,7 +41,7 @@ export async function getLatestPodcasts(
     const { results } = await stmt.all();
     const total = await getPodcastsTotal();
 
-    console.log(page, limit, results, total)
+    //console.log(page, limit, results, total)
     if (results.length === 0) {
         return { data: [], total: total };
     }

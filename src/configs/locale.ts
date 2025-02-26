@@ -34,4 +34,4 @@ export const pathnames = {
   "/": "/",
 } satisfies Record<string, string>;
 
-export const defaultPageSize = 1;
+export const defaultPageSize = 30;
