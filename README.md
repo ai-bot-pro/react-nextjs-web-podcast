@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="./public/an_AI_podcast_1400.png" alt="">
+    <img src="./public/an_AI_podcast_1400.jpg" alt="">
 </div>
 
 # AI Podcast

@@ -1,6 +1,6 @@
 "use client";
 
-import { Mic, Rss, Search } from "lucide-react";
+import { Mic, Rss, Search, Github, Apple } from "lucide-react";
 
 export default function Header() {
   return (
@@ -10,7 +10,7 @@ export default function Header() {
           <div className="flex items-center">
             <Mic className="h-8 w-8 text-indigo-600" />
             <span className="ml-2 text-xl font-bold text-gray-900">
-              Podcast
+              AI Podcast
             </span>
           </div>
           <div className="flex items-center space-x-4">
@@ -23,8 +23,27 @@ export default function Header() {
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
             <a
+              href="https://github.com/ai-bot-pro/react-nextjs-web-podcast"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+            >
+              <Github className="h-5 w-5" />
+              <span>GitHub</span>
+            </a>
+             <a
+              href="https://podcasts.apple.com/us/podcast/ai-podcast/id1798858172"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+            >
+              <Apple className="h-5 w-5" />
+              <span>Apple Podcast</span>
+            </a>
+            <a
               href="/rss.xml"
               target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
             >
               <Rss className="h-5 w-5" />
