@@ -23,7 +23,7 @@ export default function Header() {
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
             <a
-              href="/rss"
+              href="/rss.xml"
               target="_blank"
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
             >

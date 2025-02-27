@@ -6,7 +6,7 @@ export async function generatePodcastFeedXml(podcasts: Podcast[]): Promise<strin
     const channelDescription = "Latest podcasts about AI."; // Replace with your podcast description
     const channelLink = "https://weedge.us.kg"; // Replace with your website URL
     const channelLanguage = "en-us";
-    const channelImageUrl = "https://weedge.us.kg/favicon.ico"; // Replace with your podcast image
+    const channelImageUrl = "https://weedge.us.kg/an_AI_podcast.png"; // Replace with your podcast image
 
     const itemsXmlPromises = podcasts.map(async (podcast) => {
         const itemTitle = escapeXml(podcast.title);
