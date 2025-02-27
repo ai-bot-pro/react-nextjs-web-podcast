@@ -1,14 +1,13 @@
-// src/app/api/rss/route.ts
+// src/app/feed.xml/route.ts
 import { generatePodcastFeedXml } from "@/utils/xml";
 import { getLatestPodcasts } from "@/models/podcast";
-//import { Metadata } from "next"; // Remove this import
+import { Metadata } from "next";
 
-// Remove the metadata export as it's not allowed in route handlers
-// // Exporting metadata is optional, but recommended for better SEO
-// export const metadata: Metadata = {
-//   title: "AI Podcast Feed",
-//   description: "Subscribe to the AI Podcast RSS Feed.",
-// };
+// Exporting metadata is optional, but recommended for better SEO
+export const metadata: Metadata = {
+    title: "AI Podcast Feed",
+    description: "Subscribe to the AI Podcast RSS Feed.",
+};
 
 export const runtime = "edge";
 export const maxDuration = 120;
@@ -20,7 +19,7 @@ export async function GET() {
     return new Response(xml, {
         status: 200,
         headers: {
-            "Content-Type": "application/rss+xml; charset=utf-8",
+            "Content-Type": "application/xml; charset=utf-8",
             "Cache-Control": "s-maxage=86400, stale-while-revalidate",
         },
     });
