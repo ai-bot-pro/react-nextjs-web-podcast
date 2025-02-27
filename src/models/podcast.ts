@@ -92,6 +92,7 @@ export function formatPodcast(row: Record<string, unknown>): Podcast {
         tags: row.tags as string,
         category: row.category as string,
         status: row.status as string,
+        audioSize: row.audio_size as number,
     }
     return podcast;
 }
