@@ -1,13 +1,6 @@
 // src/app/api/rss/route.ts
 import { generatePodcastFeedXml } from "@/utils/xml";
 import { getLatestPodcasts } from "@/models/podcast";
-import { Metadata } from "next";
-
-// Exporting metadata is optional, but recommended for better SEO
-export const metadata: Metadata = {
-  title: "AI Podcast Feed",
-  description: "Subscribe to the AI Podcast RSS Feed.",
-};
 
 export const runtime = "edge";
 export const maxDuration = 120;
