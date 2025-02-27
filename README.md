@@ -1,6 +1,9 @@
 <div align="center">
-    <img src="./public/an_AI_podcast_to_show_the_website.png" alt="">
+    <img src="./public/an_AI_podcast_1400.png" alt="">
 </div>
+
+# AI Podcast
+-  [Apple Podcast - AI Podcast](https://podcasts.apple.com/us/podcast/ai-podcast/id1798858172)
 
 # Intro
 
