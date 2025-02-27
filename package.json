@@ -9,8 +9,9 @@
     "lint": "next lint",
     "pages:build": "npx @cloudflare/next-on-pages",
     "preview": "npm run pages:build && wrangler pages dev",
-    "deploy": "npm run pages:build && wrangler pages deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts"
+    "rss-xml": "wget 'https://pub-f8da0a7ab3e74cc8a8081b2d4b8be851.r2.dev/rss.xml' -O public/rss.xml",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
+    "deploy": "npm run rss-xml && npm run pages:build && wrangler pages deploy"
   },
   "dependencies": {
     "lucide-react": "^0.453.0",
