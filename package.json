@@ -14,6 +14,7 @@
     "deploy": "npm run rss-xml && npm run pages:build && wrangler pages deploy"
   },
   "dependencies": {
+    "@icons-pack/react-simple-icons": "^12.0.0",
     "lucide-react": "^0.453.0",
     "next": "^15.0.1",
     "next-intl": "^3.23.2",

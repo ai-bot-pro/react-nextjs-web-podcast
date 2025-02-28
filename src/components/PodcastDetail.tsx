@@ -1,16 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { ArrowLeft, Calendar, Clock, Play } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Play,
+  Share2,
+  Copy,
+  Check,
+  Send, // Use for Weibo
+} from "lucide-react";
 
 import { useAudio } from "@/contexts/AudioContext";
 import type { Podcast } from "@/types/podcast";
 import { formatTime } from "@/utils/time";
 import PodcastPlayer from "@/components/PodcastPlayer";
+import { SiWechat, SiX } from "@icons-pack/react-simple-icons";
 
 interface PodcastDetailProps {
-  pid: string; // change to pid
+  pid: string;
   onBack: () => void;
 }
 
@@ -19,13 +29,17 @@ export default function PodcastDetail({ pid, onBack }: PodcastDetailProps) {
   const [podcast, setPodcast] = useState<Podcast | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false); // State for share menu
+  const shareButtonRef = useRef<HTMLDivElement>(null);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchPodcast = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const resp = await fetch(`/api/get-podcast?id=${pid}`); // Fetch single podcast by pid
+        const resp = await fetch(`/api/get-podcast?id=${pid}`);
         if (!resp.ok) {
           throw new Error("Failed to fetch podcast");
         }
@@ -53,6 +67,66 @@ export default function PodcastDetail({ pid, onBack }: PodcastDetailProps) {
 
     fetchPodcast();
   }, [pid]);
+
+  const handleCopyLink = () => {
+    if (typeof window !== "undefined") {
+      const currentUrl = window.location.href;
+      navigator.clipboard.writeText(currentUrl).then(() => {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      });
+    }
+  };
+
+  const shareToSocialMedia = (platform: "wechat" | "weibo" | "x") => {
+    if (typeof window !== "undefined" && podcast) {
+      const currentUrl = window.location.href;
+      const title = encodeURIComponent(podcast.title);
+      const summary = encodeURIComponent(
+        podcast.description.substring(0, 100) + "..."
+      );
+
+      let shareUrl = "";
+      switch (platform) {
+        case "wechat":
+          alert("Please copy the link and share it on WeChat: " + currentUrl);
+          return;
+        case "weibo":
+          shareUrl = `http://service.weibo.com/share/share.php?url=${currentUrl}&title=${title}&summary=${summary}`;
+          break;
+        case "x":
+          shareUrl = `https://twitter.com/intent/tweet?url=${currentUrl}&text=${title}`;
+          break;
+        default:
+          return;
+      }
+      window.open(shareUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  // Handle clicking outside the share menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        shareButtonRef.current &&
+        !shareButtonRef.current.contains(event.target as Node) &&
+        shareMenuRef.current &&
+        !shareMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsShareOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleShareClick = () => {
+    setIsShareOpen(!isShareOpen);
+  };
 
   if (isLoading) {
     return (
@@ -106,13 +180,15 @@ export default function PodcastDetail({ pid, onBack }: PodcastDetailProps) {
             <h1 className="text-3xl font-bold text-gray-900">
               {podcast.title}
             </h1>
-            <button
-              onClick={() => audio.playPodcast(podcast)}
-              className="flex items-center space-x-2 bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition-colors"
-            >
-              <Play size={20} />
-              <span>Play</span>
-            </button>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => audio.playPodcast(podcast)}
+                className="flex items-center space-x-2 bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition-colors"
+              >
+                <Play size={20} />
+                <span>Play</span>
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center space-x-6 text-gray-500 mb-8">
@@ -124,6 +200,76 @@ export default function PodcastDetail({ pid, onBack }: PodcastDetailProps) {
               <Calendar size={18} className="mr-2" />
               {podcast.date}
             </span>
+            {/* Share Menu */}
+            <div className="relative" ref={shareButtonRef}>
+              <button
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+                onClick={handleShareClick} // Use onClick
+                aria-expanded={isShareOpen} //add
+                aria-haspopup="true" //add
+              >
+                <Share2 size={20} />
+                <span>Share</span>
+              </button>
+              {isShareOpen && (
+                <div
+                  ref={shareMenuRef}
+                  className="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-10"
+                  role="menu" //add
+                  aria-label="Share Menu" //add
+                >
+                  <button
+                    onClick={() => {
+                      shareToSocialMedia("wechat");
+                      setIsShareOpen(false);
+                    }}
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-left flex items-center"
+                    role="menuitem" //add
+                  >
+                    <SiWechat className="mr-2 h-4 w-4" />
+                    WeChat
+                  </button>
+                  <button
+                    onClick={() => {
+                      shareToSocialMedia("weibo");
+                      setIsShareOpen(false);
+                    }}
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-left flex items-center"
+                    role="menuitem" //add
+                  >
+                    <Send className="mr-2 h-4 w-4" />
+                    Weibo
+                  </button>
+                  <button
+                    onClick={() => {
+                      shareToSocialMedia("x");
+                      setIsShareOpen(false);
+                    }}
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-left flex items-center"
+                    role="menuitem" //add
+                  >
+                    <SiX className="mr-2 h-4 w-4" />
+                    X.com
+                  </button>
+                  <button
+                    onClick={handleCopyLink}
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-left flex items-center"
+                  >
+                    {isCopied ? (
+                      <>
+                        <Check className="mr-2 h-4 w-4 text-green-500" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="mr-2 h-4 w-4" />
+                        Copy Link
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="prose prose-lg max-w-none">

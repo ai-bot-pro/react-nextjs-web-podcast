@@ -35,3 +35,4 @@ export const pathnames = {
 } satisfies Record<string, string>;
 
 export const defaultPageSize = 30;
+export const defaultImageQuality = 60;

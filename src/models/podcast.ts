@@ -1,5 +1,6 @@
 import { getRequestContext } from '@cloudflare/next-on-pages';
 import { Podcast } from '../types/podcast';
+import { defaultImageQuality } from '../configs/locale';
 
 // see: https://developers.cloudflare.com/d1/build-with-d1/d1-client-api/
 export const runtime = 'edge';
@@ -94,5 +95,10 @@ export function formatPodcast(row: Record<string, unknown>): Podcast {
         status: row.status as string,
         audioSize: row.audio_size as number,
     }
+    if (podcast["image"].endsWith(".png")) {
+        podcast["image"] = podcast["image"].replace(".png", ".jpg");
+        podcast["image"] = podcast["image"].split(".jpg")[0] + "_" + defaultImageQuality + ".jpg";
+    }
+
     return podcast;
 }
