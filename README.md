@@ -1,87 +1,129 @@
 <div align="center">
-    <img src="./public/an_AI_podcast_1400.jpg" alt="">
+    <img src="./public/an_AI_podcast_1400.jpg" alt="AI Podcast">
 </div>
 
-# AI Podcast
--  [Apple Podcast - AI Podcast](https://podcasts.apple.com/us/podcast/ai-podcast/id1798858172)
+# AI Podcast (Web)
 
-# Backend Gen Script
+**Languages:** [English](README.md) | [简体中文](README_CN.md)
 
-use achatbot to gen podcast, gen script: https://github.com/ai-bot-pro/podcast.git
+- [Apple Podcasts — AI Podcast](https://podcasts.apple.com/us/podcast/ai-podcast/id1798858172)
 
-# Intro
+## Overview
 
-Just an AI podcasts display website(listen), the podcast content from pdf, web pages, text, pictures, audio and video and other multimodal data, through the multimodal large language model, or multiple large language model generated ai podcast content. :)
+A [Next.js](https://nextjs.org/) site for browsing and playing **AI-generated podcast** episodes. Episode metadata and listings are served from **Cloudflare D1**; audio and artwork URLs typically point to **R2** (or other HTTPS hosts). Content can originate from PDFs, web pages, text, images, audio, and video, then be turned into podcasts via multimodal or chained LLM pipelines.
 
+To **generate** episodes and maintain the publishing pipeline, use the companion repo: [github.com/ai-bot-pro/podcast](https://github.com/ai-bot-pro/podcast.git) (or the `podcast/` package in this monorepo, if you use it locally).
 
----
+## Features
 
-# Deploy Cloudflare
+- Home page with latest episodes, pagination, and an in-page audio player  
+- Episode detail route: `/podcast/[pid]`  
+- RSS feed: `/api/rss` (fetches a hosted `rss.xml` when available, otherwise builds a feed from D1)  
+- Edge route handlers (`runtime = 'edge'`) for low-latency API responses on Cloudflare Pages  
 
-## Getting Started
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`c3`](https://developers.cloudflare.com/pages/get-started/c3).
+## Tech stack
 
-First, run the development server:
+- Next.js 15, React 18, TypeScript, Tailwind CSS  
+- Deploy target: [Cloudflare Pages](https://pages.cloudflare.com/) with [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages)  
+- **D1** binding `PODCAST_DB` for the `podcast` table  
+- **R2** binding `PODCAST_BUCKET` in `wrangler.toml` (reserved for assets; URLs in DB may already point at public R2 URLs)  
+
+## Prerequisites
+
+- Node.js 18.18+ (recommended for Next.js 15)  
+- npm, pnpm, or yarn  
+- [Wrangler](https://developers.cloudflare.com/workers/wrangler/) (installed locally via devDependencies) and a Cloudflare account for production deploy  
+
+## Getting started
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+### Cloudflare bindings (`wrangler.toml`)
+
+1. Create (or select) a **D1** database and an **R2** bucket in the Cloudflare dashboard.  
+2. Update `wrangler.toml`: set `database_id` for `PODCAST_DB` and align `bucket_name` / bindings with your account.  
+3. In the Pages project settings, attach the same **D1** and **R2** bindings so production matches local config.  
+4. After changing bindings, regenerate types:
+
+```bash
+npm run cf-typegen
+```
+
+### Local D1 schema and sample data
+
+The file [`data/podcast.sql`](data/podcast.sql) defines the `podcast` table and includes sample rows. Comments at the top show how to apply it to a **local** D1 database with Wrangler, for example:
+
+```bash
+npx wrangler d1 execute podcast_hub --local --file=./data/podcast.sql
+```
+
+Adjust the database name to match your `wrangler.toml` (`database_name`).
+
+### Development server
+
+This project uses `setupDevPlatform()` from `@cloudflare/next-on-pages` in [`next.config.mjs`](next.config.mjs) so D1 and other bindings can be used during `next dev`. See the [recommended dev workflow](https://github.com/cloudflare/next-on-pages/blob/main/internal-packages/next-dev/README.md#recommended-development-workflow) and periodically run **preview** (below) to validate the Pages build.
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-> __TIPS__: dev data see: [data/podcast.sql](data/podcast.sql)
+### Pages build and local preview
 
-## Cloudflare integration
+```bash
+npm run pages:build
+npm run preview
+```
 
-Besides the `dev` script mentioned above `c3` has added a few extra scripts that allow you to integrate the application with the [Cloudflare Pages](https://pages.cloudflare.com/) environment, these are:
-  - `pages:build` to build the application for Pages using the [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages) CLI
-  - `preview` to locally preview your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
-  - `deploy` to deploy your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
+`preview` runs `pages:build` then `wrangler pages dev` against the build output.
 
-> __Note:__ while the `dev` script is optimal for local development you should preview your Pages application as well (periodically or before deployments) in order to make sure that it can properly work in the Pages environment (for more details see the [`@cloudflare/next-on-pages` recommended workflow](https://github.com/cloudflare/next-on-pages/blob/main/internal-packages/next-dev/README.md#recommended-development-workflow))
+## npm scripts
 
-### Bindings
+| Script | Description |
+|--------|-------------|
+| `dev` | Next.js development server with Cloudflare dev bindings |
+| `build` | Standard Next.js production build |
+| `start` | Start Next.js server (Node deployment; not the primary path for Pages) |
+| `lint` | Run ESLint |
+| `pages:build` | Build for Cloudflare Pages via `@cloudflare/next-on-pages` |
+| `preview` | `pages:build` + `wrangler pages dev` |
+| `deploy` | Download `rss.xml` into `public/`, then `pages:build`, then `wrangler pages deploy` |
+| `rss-xml` | `wget` remote `rss.xml` into `public/rss.xml` (used by `deploy`) |
+| `cf-typegen` | Generate `env.d.ts` from `wrangler.toml` (`CloudflareEnv`) |
 
-Cloudflare [Bindings](https://developers.cloudflare.com/pages/functions/bindings/) are what allows you to interact with resources available in the Cloudflare Platform.
+## API routes
 
-You can use bindings during development, when previewing locally your application and of course in the deployed application:
+| Method / path | Purpose |
+|---------------|---------|
+| `POST /api/get-latest-podcasts` | JSON body: `{ "page": number, "limit": number }` — paginated published episodes from D1 |
+| `GET /api/get-podcast?id=<pid>` | Single episode by `pid` |
+| `GET /api/rss` | RSS XML (proxy or D1 fallback) |
 
-- To use bindings in dev mode you need to define them in the `next.config.js` file under `setupDevBindings`, this mode uses the `next-dev` `@cloudflare/next-on-pages` submodule. For more details see its [documentation](https://github.com/cloudflare/next-on-pages/blob/05b6256/internal-packages/next-dev/README.md).
+The `/rss` page redirects to `/api/rss`.
 
-- To use bindings in the preview mode you need to add them to the `pages:preview` script accordingly to the `wrangler pages dev` command. For more details see its [documentation](https://developers.cloudflare.com/workers/wrangler/commands/#dev-1) or the [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
+## Deploy to Cloudflare Pages
 
-- To use bindings in the deployed application you will need to configure them in the Cloudflare [dashboard](https://dash.cloudflare.com/). For more details see the  [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
+1. Ensure `wrangler.toml` and dashboard bindings match (D1, R2).  
+2. Run:
 
-#### KV Example
+```bash
+npm run deploy
+```
 
-`c3` has added for you an example showing how you can use a KV binding.
+This refreshes `public/rss.xml` from the configured URL, builds with `next-on-pages`, and deploys via Wrangler. Set Pages project name / account as required by your Wrangler login.
 
-In order to enable the example:
-- Search for javascript/typescript lines containing the following comment:
-  ```ts
-  // KV Example:
-  ```
-  and uncomment the commented lines below it.
-- Do the same in the `wrangler.toml` file, where
-  the comment is:
-  ```
-  # KV Example:
-  ```
-- If you're using TypeScript run the `cf-typegen` script to update the `env.d.ts` file:
-  ```bash
-  npm run cf-typegen
-  # or
-  yarn cf-typegen
-  # or
-  pnpm cf-typegen
-  # or
-  bun cf-typegen
-  ```
+## Project layout (high level)
 
-After doing this you can run the `dev` or `preview` script and visit the `/api/hello` route to see the example in action.
+- `src/app/` — App Router pages and route handlers  
+- `src/components/` — UI including player and cards  
+- `src/models/podcast.ts` — D1 queries  
+- `data/podcast.sql` — Schema and optional seed data for local D1  
 
-Finally, if you also want to see the example work in the deployed application make sure to add a `MY_KV_NAMESPACE` binding to your Pages application in its [dashboard kv bindings settings section](https://dash.cloudflare.com/?to=/:account/pages/view/:pages-project/settings/functions#kv_namespace_bindings_section). After having configured it make sure to re-deploy your application.
+---
+
+Bootstrapped with Cloudflare [`c3`](https://developers.cloudflare.com/pages/get-started/c3) for Next.js on Pages.
