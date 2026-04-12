@@ -5,19 +5,13 @@
 # AI Podcast
 -  [Apple Podcast - AI Podcast](https://podcasts.apple.com/us/podcast/ai-podcast/id1798858172)
 
-# Backend
+# Backend Gen Script
 
-use achatbot to gen podcast, gen script: https://github.com/ai-bot-pro/achatbot/blob/main/demo/gen_podcast.py 
+use achatbot to gen podcast, gen script: https://github.com/ai-bot-pro/podcast.git
 
 # Intro
 
 Just an AI podcasts display website(listen), the podcast content from pdf, web pages, text, pictures, audio and video and other multimodal data, through the multimodal large language model, or multiple large language model generated ai podcast content. :)
-
-data process pipeline:
-
-- dify platform (change template to diy a pipeline)
-- coze platform (diy pipeline)
-- **apipeai/achatbot** (use remote api models and local open source generative models), Main content source, free style~ :)
 
 
 ---
