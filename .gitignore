@@ -41,3 +41,5 @@ next-env.d.ts
 
 # rss.xml
 *.xml
+
+pnpm-lock.yaml

@@ -28,10 +28,19 @@ To **generate** episodes and maintain the publishing pipeline, use the companion
 - **D1** binding `PODCAST_DB` for the `podcast` table  
 - **R2** binding `PODCAST_BUCKET` in `wrangler.toml` (reserved for assets; URLs in DB may already point at public R2 URLs)  
 
+## Security and Dependabot
+
+GitHub may report a large number of **open Dependabot alerts**; many come from **development-only** transitive packages (for example the `vercel` CLI used by `@cloudflare/next-on-pages`, `wrangler`, ESLint, and tar/glob in the toolchain). Those do not all ship in the production Pages bundle, but they still deserve periodic upgrades.
+
+- **Next.js** is pinned to **15.5.15**, which includes the fix for critical RSC issue [CVE-2025-66478](https://nextjs.org/blog/CVE-2025-66478) (see also `npm overrides` in `package.json`). `@cloudflare/next-on-pages` still lists `next <= 15.5.2` as a peer range; upgrading past that is intentional for security. Longer term, Cloudflare recommends the [OpenNext adapter](https://opennext.js.org/cloudflare) instead of `next-on-pages`.
+- Track remaining issues in the repo [Security / Dependabot](https://github.com/ai-bot-pro/react-nextjs-web-podcast/security/dependabot) tab and re-run `npm install` / lockfile updates after advisories change.
+
+This repository uses **npm** and **`package-lock.json` only** (no `pnpm-lock.yaml`) so local and CI builds stay consistent with `npx @cloudflare/next-on-pages`.
+
 ## Prerequisites
 
 - Node.js 18.18+ (recommended for Next.js 15)  
-- npm, pnpm, or yarn  
+- **npm** (lockfile: `package-lock.json`)  
 - [Wrangler](https://developers.cloudflare.com/workers/wrangler/) (installed locally via devDependencies) and a Cloudflare account for production deploy  
 
 ## Getting started
